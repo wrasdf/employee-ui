@@ -35,7 +35,7 @@ workflows:
       - ut
       - e2e:
           requires:
-            - apiut
+            - ut
 
   release-build:
     jobs:
