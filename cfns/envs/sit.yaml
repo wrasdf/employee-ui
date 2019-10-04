@@ -1,0 +1,5 @@
+---
+website:
+  domainName: employee.apollo-dev.platform.myobdev.com
+  hostedZoneId: Z18N0T1ZWA0GBQ
+  acmCertificateArn: arn:aws:acm:us-east-1:850603229734:certificate/04bdc341-b068-4529-b8a9-91590f35b1ba

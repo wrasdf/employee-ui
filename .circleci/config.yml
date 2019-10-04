@@ -1,0 +1,47 @@
+version: 2.1
+jobs:
+
+  ut:
+    machine: true
+    steps:
+      - checkout
+      - run:
+         name: Unit Test
+         command: |
+            make ut
+
+  e2e:
+    machine: true
+    steps:
+      - checkout
+      - run:
+         name: E2E Test
+         command: |
+            make e2e
+
+  deploy-cloudfront:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Deploy To CloudFront
+          command: |
+            make deploy-cloudfront
+
+workflows:
+  version: 2
+  any-commit:
+    jobs:
+      - ut
+      - e2e:
+          requires:
+            - apiut
+
+  release-build:
+    jobs:
+      - deploy-cloudfront:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/

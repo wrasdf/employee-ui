@@ -1,0 +1,59 @@
+---
+version: '3.2'
+
+services:
+
+  apache:
+    working_dir: /app
+    image: httpd:2.4.41-alpine
+    restart: always
+    volumes:
+      - ./app/dist:/usr/local/apache2/htdocs/
+    ports:
+      - 8081:80
+
+  ut:
+    build:
+      context: ./app
+    entrypoint:
+      - npm
+      - run
+      - test
+
+  ui: &ui
+    working_dir: /app
+    build:
+      context: ./app
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    ports:
+      - 8082:8082
+    entrypoint:
+      - npm
+      - run
+      - serve
+
+  shui:
+    <<: *ui
+    entrypoint:
+      - sh
+
+  ctpl:
+    image: ikerry/ctpl:v0.1.5
+    working_dir: /app
+    volumes:
+      - .:/app
+      - "$HOME/.aws:/root/.aws"
+
+  aws:
+    image: mesosphere/aws-cli:1.14.5
+    working_dir: /app
+    environment:
+      - AWS_DEFAULT_REGION=ap-southeast-2
+    volumes:
+      - .:/app
+      - $HOME/.aws:/root/.aws
+
+volumes:
+  db-data:
